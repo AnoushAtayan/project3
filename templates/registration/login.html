@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% load account %}
-
 {% block title %} | Login{% endblock title %}
 
 {% block nav %}
@@ -12,13 +10,8 @@
     <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
 </ul>
 <ul class="navbar-nav ml-auto">
-    {% if user.is_authenticated %}
-    <li class="nav-item"><a href="#" class="nav-link">{{ user.username|title }} </a></li>
-    <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link">Logout</a></li>
-    {% else %}
-    <li class="nav-item active"><a href="{% url 'account_login' %}" class="nav-link">Login</a></li>
-    <li class="nav-item"><a href="{% url 'account_signup' %}" class="nav-link">Register</a></li>
-    {% endif %}
+    <li class="nav-item active"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+    <li class="nav-item"><a href="{% url 'signup' %}" class="nav-link">Register</a></li>
 </ul>
 {% endblock nav %}
 
@@ -27,14 +20,19 @@
     <div class="container mt-5">
         <div class="row d-flex justify-content-center block-9">
             <div class="col-md-6 ftco-animate">
-                <form action="#" class="contact-form">
+                <form action="{% url 'login' %}" class="contact-form" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <input type="email" name="login" class="form-control" placeholder="Email Address" autofocus="autofocus" required id="id_login">
+                        <input type="email" name="username" class="form-control" maxlength="254" placeholder="Email Address" autofocus="autofocus" required id="id_username">
                     </div>
                     <div class="form-group">
                         <input type="password" name="password" class="form-control" placeholder="Password" required id="id_password">
                     </div>
+                    {% if form.errors %}
+                    {% for v in form.errors.values %}
+                    <p class="invalid-feedback">{{ v | first}}</p>
+                    {% endfor %}
+                    {% endif %}
                     <div class="form-group">
                         <input type="submit" value="Login" class="btn btn-primary py-3 px-5">
                     </div>
